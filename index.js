@@ -25,6 +25,10 @@ function operation() {
         ],
       },
     ])
-    .then()
+    .then((answer) => {
+      const action = answer["action"]
+
+      console.log(action)
+    })
     .catch((err) => console.log(err))
 }
