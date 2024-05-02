@@ -18,7 +18,7 @@ function operation() {
         message: "O que você deseja fazer ?",
         choices: [
           "Criar conta",
-          "Consultar Saldo",
+          "Consultar saldo",
           "Depositar",
           "Sacar",
           "Sair",
@@ -30,6 +30,11 @@ function operation() {
 
       if (action === "Criar conta") {
         createAccount()
+      } else if (action === "Depositar") {
+      } else if (action === "Consultar saldo") {
+      } else if (action === "Sacar") {
+      } else if (action === "Sair") {
+        console.log(chalk.bgBlue.black("Obrigado por ter usado o Accounts!!!"))
       }
     })
     .catch((err) => console.log(err))
@@ -40,4 +45,49 @@ function operation() {
 function createAccount() {
   console.log(chalk.bgGreen.black("Parabens por escolher o nosso banco"))
   console.log(chalk.green("Defina as opções de sua conta a seguir"))
+
+  buildAccount()
 }
+
+function buildAccount() {
+  inquirer
+    .prompt([
+      {
+        name: "accountName",
+        message: "Digite um nome para sua conta",
+      },
+    ])
+    .then((answer) => {
+      const accountName = answer["accountName"]
+
+      console.info(accountName)
+
+      if (!fs.existsSync("accounts")) {
+        fs.mkdirSync("accounts")
+      }
+
+      if (fs.existsSync(`accounts/${accountName}.json`)) {
+        console.log(
+          chalk.bgRed.black(
+            "Esse nome de conta não está disponível, escolha outro nome"
+          )
+        )
+        buildAccount()
+        return
+      }
+
+      fs.writeFileSync(
+        `accounts/${accountName}.json`,
+        '{"balance": 0}',
+        function (err) {
+          console.log(err)
+        }
+      )
+
+      console.log(chalk.green("Parabéns sua conta foi criada"))
+      operation()
+    })
+    .catch((err) => console.log(err))
+}
+
+function consultarSaldo() {}
