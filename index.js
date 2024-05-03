@@ -33,6 +33,7 @@ function operation() {
       } else if (action === "Depositar") {
         deposit()
       } else if (action === "Consultar saldo") {
+        getAccountBalance()
       } else if (action === "Sacar") {
       } else if (action === "Sair") {
         console.log(chalk.bgBlue.black("Obrigado por ter usado o Accounts!!!"))
@@ -90,8 +91,6 @@ function buildAccount() {
     })
     .catch((err) => console.log(err))
 }
-
-function consultarSaldo() {}
 
 //add certain amount to a users account
 function deposit() {
@@ -168,4 +167,32 @@ function getAccount(accountName) {
     flag: "r",
   })
   return JSON.parse(accountJSON)
+}
+
+//show account balance
+function getAccountBalance() {
+  inquirer
+    .prompt([
+      {
+        name: "accountName",
+        message: "Qual o nome da sua conta!",
+      },
+    ])
+    .then((answer) => {
+      const accountName = answer["accountName"]
+
+      if (!checkAccount(accountName)) {
+        return getAccountBalance()
+      }
+
+      const accountData = getAccount(accountName)
+
+      console.log(
+        chalk.bgBlue.black(
+          `Olá o saldo de sua conta é ${accountData.balance} reais`
+        )
+      )
+      operation()
+    })
+    .catch((err) => console.log(err))
 }
